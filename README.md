@@ -2,6 +2,7 @@ Malverse Games
 Welcome to Malverse Games, a collection of interactive web-based games designed to challenge your skills and entertain you! Each game features unique gameplay mechanics, and you can track your scores on our centralized leaderboard.
 
 Table of Contents
+
 Introduction
 Games
 How to Play
@@ -69,5 +70,4 @@ Contributing
 Contributions are welcome! If you have suggestions for new games or features, please open an issue or submit a pull request.
 
 License
-This project is licensed under the MIT License. See the LICENSE file for details.
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under a custom License. See the LICENSE file for details.
