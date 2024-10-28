@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malverse Scoring Board</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: monospace;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #scoreboard {
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid green;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        #scores {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="scoreboard">
+        <h2>Malverse Scoreboard</h2>
+        <div id="scores">Loading scores...</div>
+    </div>
+    <script>
+        function loadScores() {
+            const scores = JSON.parse(localStorage.getItem('scores')) || {};
+            const scoresDiv = document.getElementById('scores');
+            scoresDiv.innerHTML = '';
+
+            if (Object.keys(scores).length === 0) {
+                scoresDiv.textContent = 'No scores yet.';
+                return;
+            }
+
+            for (const game in scores) {
+                const scoreEntry = document.createElement('div');
+                scoreEntry.innerHTML = `<strong>${game}:</strong> ${scores[game].join(', ')}`;
+                scoresDiv.appendChild(scoreEntry);
+            }
+        }
+
+        // Load scores on page load
+        window.onload = loadScores;
+    </script>
+</body>
+</html>

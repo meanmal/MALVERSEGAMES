@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malverse: Data Heist</title>
+    <style>
+        body { background: black; color: green; font-family: monospace; }
+        #game { width: 300px; height: 300px; border: 2px solid green; padding: 10px; }
+        #rules { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <h1>Malverse: Data Heist</h1>
+        <div id="rules">
+            <h2>How to Play</h2>
+            <p>Solve 10 math questions correctly to steal data!</p>
+            <p>Earn 10 points for each correct answer.</p>
+            <p>Try to beat your high score!</p>
+        </div>
+        <button id="start-btn">Start Game</button>
+        <p id="question"></p>
+        <input type="text" id="answer" placeholder="Your answer" />
+        <button id="submit-btn" style="display: none;">Submit</button>
+        <p id="feedback"></p>
+        <p id="score"></p>
+    </div>
+    <script>
+        const questions = [
+            { question: 'What is 2 + 3?', answer: '5' },
+            { question: 'What is 10 - 4?', answer: '6' },
+            { question: 'What is 7 * 3?', answer: '21' },
+            { question: 'What is 20 / 4?', answer: '5' },
+            { question: 'What is 15 + 5?', answer: '20' },
+            { question: 'What is 30 - 10?', answer: '20' },
+            { question: 'What is 9 * 9?', answer: '81' },
+            { question: 'What is 100 - 50?', answer: '50' },
+            { question: 'What is 8 + 2?', answer: '10' },
+            { question: 'What is 6 / 2?', answer: '3' },
+            { question: 'What is 4 * 5?', answer: '20' },
+            { question: 'What is 50 + 25?', answer: '75' },
+            { question: 'What is 12 - 7?', answer: '5' },
+            { question: 'What is 14 / 2?', answer: '7' },
+            { question: 'What is 30 + 20?', answer: '50' },
+            { question: 'What is 18 - 9?', answer: '9' },
+            { question: 'What is 5 * 2?', answer: '10' },
+            { question: 'What is 3 + 7?', answer: '10' },
+            { question: 'What is 40 / 5?', answer: '8' },
+            { question: 'What is 100 / 10?', answer: '10' },
+            { question: 'What is 60 - 20?', answer: '40' },
+            { question: 'What is 7 + 6?', answer: '13' },
+            { question: 'What is 5 + 5 + 5?', answer: '15' },
+            { question: 'What is 3 * 3?', answer: '9' },
+            { question: 'What is 11 - 4?', answer: '7' },
+            { question: 'What is 20 - 15?', answer: '5' },
+            { question: 'What is 8 * 5?', answer: '40' },
+            { question: 'What is 100 - 25?', answer: '75' },
+            { question: 'What is 9 + 10?', answer: '19' },
+            { question: 'What is 50 / 5?', answer: '10' },
+            { question: 'What is 7 * 6?', answer: '42' },
+            { question: 'What is 3 + 8?', answer: '11' },
+            { question: 'What is 45 - 5?', answer: '40' },
+            { question: 'What is 14 + 6?', answer: '20' },
+            { question: 'What is 100 + 50?', answer: '150' },
+            { question: 'What is 90 - 30?', answer: '60' },
+            { question: 'What is 2 + 2 + 2 + 2?', answer: '8' },
+            { question: 'What is 30 / 3?', answer: '10' },
+            { question: 'What is 100 - 20 - 10?', answer: '70' },
+            { question: 'What is 4 * 3?', answer: '12' },
+            { question: 'What is 25 + 25?', answer: '50' },
+            { question: 'What is 15 / 3?', answer: '5' },
+            { question: 'What is 80 - 30?', answer: '50' },
+            { question: 'What is 6 + 4?', answer: '10' },
+            { question: 'What is 10 * 2?', answer: '20' },
+            { question: 'What is 35 - 15?', answer: '20' },
+            { question: 'What is 50 + 30?', answer: '80' },
+            { question: 'What is 5 + 15?', answer: '20' },
+            { question: 'What is 2 * 6?', answer: '12' },
+            { question: 'What is 3 * 4?', answer: '12' },
+            { question: 'What is 90 / 9?', answer: '10' },
+            { question: 'What is 25 - 5?', answer: '20' },
+            { question: 'What is 5 * 5?', answer: '25' },
+            { question: 'What is 10 + 10?', answer: '20' },
+            { question: 'What is 60 / 6?', answer: '10' },
+            { question: 'What is 70 - 30?', answer: '40' },
+            { question: 'What is 2 + 8?', answer: '10' },
+            { question: 'What is 50 / 10?', answer: '5' },
+            { question: 'What is 8 + 2 + 2?', answer: '12' },
+            { question: 'What is 30 + 30?', answer: '60' },
+            { question: 'What is 10 - 2?', answer: '8' },
+            { question: 'What is 20 / 2?', answer: '10' },
+            { question: 'What is 45 + 5?', answer: '50' },
+            { question: 'What is 5 + 10 + 5?', answer: '20' },
+            { question: 'What is 12 * 2?', answer: '24' },
+            { question: 'What is 60 - 10?', answer: '50' },
+            { question: 'What is 100 / 5?', answer: '20' },
+            { question: 'What is 75 - 25?', answer: '50' },
+            { question: 'What is 30 - 20?', answer: '10' },
+            { question: 'What is 14 / 2?', answer: '7' },
+            { question: 'What is 10 * 10?', answer: '100' },
+            { question: 'What is 16 - 6?', answer: '10' },
+            { question: 'What is 50 + 50?', answer: '100' },
+            { question: 'What is 3 + 3 + 4?', answer: '10' },
+            { question: 'What is 18 + 2?', answer: '20' },
+            { question: 'What is 25 / 5?', answer: '5' },
+            { question: 'What is 10 + 20?', answer: '30' },
+            { question: 'What is 5 * 2 + 3?', answer: '13' },
+            { question: 'What is 9 * 2?', answer: '18' },
+            { question: 'What is 7 + 2 + 1?', answer: '10' },
+            { question: 'What is 80 / 8?', answer: '10' },
+            { question: 'What is 45 + 15?', answer: '60' },
+            { question: 'What is 6 * 2?', answer: '12' },
+            { question: 'What is 100 + 100?', answer: '200' },
+            { question: 'What is 2 * 5 + 5?', answer: '15' },
+            { question: 'What is 10 + 10?', answer: '20' },
+            { question: 'What is 6 + 4?', answer: '10' },
+            { question: 'What is 20 - 10 + 5?', answer: '15' },
+            { question: 'What is 90 - 80 + 0?', answer: '10' },
+            { question: 'What is 8 * 2?', answer: '16' },
+            { question: 'What is 50 - 30 + 5?', answer: '25' },
+            { question: 'What is 20 - 10 + 5?', answer: '15' },
+            { question: 'What is 10 + 10 - 5?', answer: '15' },
+            { question: 'What is 70 - 60 + 0?', answer: '10' },
+            { question: 'What is 50 + 25 - 10?', answer: '65' },
+            { question: 'What is 5 + 5 + 5 + 5?', answer: '20' },
+            { question: 'What is 30 + 15 - 5?', answer: '40' },
+            { question: 'What is 3 * 3 + 3?', answer: '12' },
+            { question: 'What is 40 - 20 + 10?', answer: '30' },
+            { question: 'What is 5 + 5 + 2?', answer: '12' },
+            { question: 'What is 60 + 10 - 20?', answer: '50' },
+            { question: 'What is 20 - 5 - 5?', answer: '10' },
+            { question: 'What is 30 + 20 - 10?', answer: '40' },
+            { question: 'What is 80 - 10?', answer: '70' },
+            { question: 'What is 5 * 4 - 5?', answer: '15' },
+            { question: 'What is 100 + 1 - 1?', answer: '100' },
+            { question: 'What is 20 + 5 + 5?', answer: '30' },
+            { question: 'What is 90 - 70?', answer: '20' },
+            { question: 'What is 100 - 60 + 20?', answer: '60' },
+            { question: 'What is 10 + 10 + 10?', answer: '30' },
+            { question: 'What is 2 + 2 + 2 + 2 + 2?', answer: '10' },
+            { question: 'What is 15 + 5 - 10?', answer: '10' },
+            { question: 'What is 80 - 50?', answer: '30' },
+            { question: 'What is 10 + 5 + 5?', answer: '20' },
+            { question: 'What is 6 + 4?', answer: '10' },
+            { question: 'What is 25 - 10 + 5?', answer: '20' },
+            { question: 'What is 3 * 4 + 2?', answer: '14' },
+            { question: 'What is 50 + 25 - 15?', answer: '60' },
+            { question: 'What is 20 / 4 + 5?', answer: '10' },
+            { question: 'What is 60 - 40?', answer: '20' },
+            { question: 'What is 4 + 6?', answer: '10' },
+            { question: 'What is 90 + 10 - 80?', answer: '20' },
+            { question: 'What is 8 + 8 - 6?', answer: '10' },
+            { question: 'What is 12 - 2?', answer: '10' },
+            { question: 'What is 100 - 50 - 25?', answer: '25' },
+        ];
+
+        let currentScore = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+        let questionIndex = 0;
+        let selectedQuestions = [];
+
+        document.getElementById('start-btn').onclick = startGame;
+
+        function startGame() {
+            currentScore = 0;
+            questionIndex = 0;
+            selectedQuestions = [];
+            document.getElementById('feedback').innerText = '';
+            document.getElementById('score').innerText = `Score: ${currentScore}`;
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('question').style.display = 'block';
+            document.getElementById('answer').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'inline-block';
+            askQuestion();
+        }
+
+        function askQuestion() {
+            if (selectedQuestions.length < 10) {
+                let question;
+                do {
+                    question = questions[Math.floor(Math.random() * questions.length)];
+                } while (selectedQuestions.includes(question));
+                selectedQuestions.push(question);
+                document.getElementById('question').innerText = question.question;
+            } else {
+                endGame();
+            }
+        }
+
+        document.getElementById('submit-btn').onclick = function() {
+            const answer = document.getElementById('answer').value;
+            const correctAnswer = selectedQuestions[questionIndex].answer;
+            if (answer === correctAnswer) {
+                currentScore += 10;
+                document.getElementById('feedback').innerText = 'Correct!';
+            } else {
+                document.getElementById('feedback').innerText = `Wrong! The correct answer was ${correctAnswer}.`;
+            }
+            questionIndex++;
+            document.getElementById('score').innerText = `Score: ${currentScore}`;
+            document.getElementById('answer').value = '';
+            askQuestion();
+        };
+
+        function endGame() {
+            document.getElementById('question').style.display = 'none';
+            document.getElementById('answer').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('start-btn').style.display = 'block';
+            if (currentScore > highScore) {
+                localStorage.setItem('highScore', currentScore);
+                alert('You beat your high score! New high score: ' + currentScore);
+            } else {
+                alert('Game over! Your score: ' + currentScore + ' High score: ' + highScore);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malverse: Firewall Rush</title>
+    <style>
+        body { background: black; color: green; font-family: monospace; }
+        #game { width: 300px; height: 300px; border: 2px solid green; position: relative; overflow: hidden; }
+        .obstacle { width: 30px; height: 10px; background: red; position: absolute; }
+        .player { width: 20px; height: 20px; background: green; position: absolute; bottom: 0; }
+        #rules { margin: 20px; }
+        #scoreboard { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="rules">
+        <h1>Malverse: Firewall Rush</h1>
+        <h2>Rules:</h2>
+        <ul>
+            <li>Use the left and right arrow keys to move your bot.</li>
+            <li>Dodge the falling red firewalls.</li>
+            <li>Stay alive as long as you can!</li>
+        </ul>
+    </div>
+    <div id="game">
+        <div class="player" id="player" style="left: 140px;"></div>
+    </div>
+    <div id="scoreboard">
+        <h2>Score: <span id="score">0</span></h2>
+        <h2>Best Score: <span id="bestScore">0</span></h2>
+    </div>
+    <script>
+        const game = document.getElementById('game');
+        const player = document.getElementById('player');
+        const scoreDisplay = document.getElementById('score');
+        const bestScoreDisplay = document.getElementById('bestScore');
+        let playerPosition = 140; // Initial position
+        let score = 0;
+        let gameInterval;
+        
+        // Load best score from localStorage
+        let bestScore = localStorage.getItem('bestScore') || 0;
+        bestScoreDisplay.textContent = bestScore;
+
+        document.addEventListener('keydown', (event) => {
+            const step = 10;
+            if (event.key === 'ArrowLeft' && playerPosition > 0) {
+                playerPosition -= step;
+                player.style.left = `${playerPosition}px`;
+            }
+            if (event.key === 'ArrowRight' && playerPosition < 280) {
+                playerPosition += step;
+                player.style.left = `${playerPosition}px`;
+            }
+        });
+
+        function startGame() {
+            score = 0;
+            scoreDisplay.textContent = score;
+            gameInterval = setInterval(() => {
+                const obstacle = document.createElement('div');
+                obstacle.className = 'obstacle';
+                obstacle.style.top = '0px';
+                obstacle.style.left = `${Math.random() * 270}px`;
+                game.appendChild(obstacle);
+                moveObstacle(obstacle);
+            }, 1000);
+        }
+
+        function moveObstacle(obstacle) {
+            let pos = 0;
+            const interval = setInterval(() => {
+                pos += 5;
+                obstacle.style.top = `${pos}px`;
+                if (pos > 300) {
+                    clearInterval(interval);
+                    game.removeChild(obstacle);
+                    score += 1; // Increase score for dodging an obstacle
+                    scoreDisplay.textContent = score;
+                }
+
+                // Check for collision
+                const obstacleRect = obstacle.getBoundingClientRect();
+                const playerRect = player.getBoundingClientRect();
+                if (
+                    playerRect.left < obstacleRect.right &&
+                    playerRect.right > obstacleRect.left &&
+                    playerRect.top < obstacleRect.bottom &&
+                    playerRect.bottom > obstacleRect.top
+                ) {
+                    endGame();
+                }
+            }, 100);
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            alert("Game Over! You hit a firewall!");
+
+            // Update best score
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('bestScore', bestScore);
+                bestScoreDisplay.textContent = bestScore;
+                alert("You beat your high score!");
+            }
+
+            // Clear game area
+            game.innerHTML = ''; 
+            game.appendChild(player); // Re-add player
+            player.style.left = '140px'; // Reset player position
+        }
+
+        // Start the game on page load
+        startGame();
+    </script>
+</body>
+</html>

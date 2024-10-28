@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malverse: Bot Battle Arena</title>
+    <style>
+        body { background: black; color: green; font-family: monospace; text-align: center; }
+        #game { width: 300px; height: 300px; border: 2px solid green; position: relative; margin: auto; }
+        .bot { width: 20px; height: 20px; background: green; position: absolute; }
+        #score, #high-score, #rules { margin: 10px; }
+        button { padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1>Malverse: Bot Battle Arena</h1>
+    <div id="rules">
+        <h2>How to Play</h2>
+        <p>Click on the bots to earn points!</p>
+        <p>Each bot clicked gives you 10 points.</p>
+        <p>Try to beat your high score!</p>
+    </div>
+    <div id="game"></div>
+    <div id="score">Score: 0</div>
+    <div id="high-score">High Score: 0</div>
+    <button id="start-btn">Start Game</button>
+
+    <script>
+        const game = document.getElementById('game');
+        const scoreDisplay = document.getElementById('score');
+        const highScoreDisplay = document.getElementById('high-score');
+        const startBtn = document.getElementById('start-btn');
+
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+        highScoreDisplay.innerText = `High Score: ${highScore}`;
+
+        startBtn.onclick = startGame;
+
+        function startGame() {
+            score = 0;
+            scoreDisplay.innerText = `Score: ${score}`;
+            game.innerHTML = ''; // Clear previous bots
+            createBots(5); // Create 5 bots
+        }
+
+        function createBots(count) {
+            for (let i = 0; i < count; i++) {
+                createBot();
+            }
+        }
+
+        function createBot() {
+            const bot = document.createElement('div');
+            bot.className = 'bot';
+            bot.style.left = `${Math.random() * 280}px`;
+            bot.style.top = `${Math.random() * 280}px`;
+            bot.onclick = () => botClicked(bot);
+            game.appendChild(bot);
+        }
+
+        function botClicked(bot) {
+            score += 10;
+            scoreDisplay.innerText = `Score: ${score}`;
+            game.removeChild(bot);
+            createBot(); // Create a new bot after clicking
+            checkHighScore();
+        }
+
+        function checkHighScore() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+                alert('You beat your high score! New high score: ' + highScore);
+            }
+        }
+    </script>
+</body>
+</html>

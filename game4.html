@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malverse: Phishing Simulator</title>
+    <style>
+        body { background: black; color: green; font-family: monospace; }
+        #game { margin: 20px; }
+        #info { margin: 20px; }
+        #scoreboard { margin-top: 20px; }
+        #feedback { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <h1>Malverse: Phishing Simulator</h1>
+        <p>What do you do?</p>
+        <button onclick="choose('report')">Report</button>
+        <button onclick="choose('ignore')">Ignore</button>
+        <p id="feedback"></p>
+    </div>
+    <div id="info">
+        <h2>How to Play:</h2>
+        <ul>
+            <li>You will encounter various phishing attempts.</li>
+            <li>Choose wisely between "Report" and "Ignore".</li>
+            <li>Your choices will affect your score.</li>
+            <li>Try to achieve the highest score possible!</li>
+        </ul>
+        <h2>About the Game:</h2>
+        <p>This simulator educates players about the dangers of phishing attacks. Make the right decisions to improve your score and awareness.</p>
+    </div>
+    <div id="scoreboard">
+        <h2>Score: <span id="score">0</span></h2>
+    </div>
+    <script>
+        let score = 0;
+
+        function choose(action) {
+            const feedback = document.getElementById('feedback');
+            if (action === 'report') {
+                feedback.innerText = "Good choice! You've reported a phishing attempt.";
+                score += 10; // Increase score for reporting
+            } else {
+                feedback.innerText = "You fell for it! Always be cautious!";
+                score -= 5; // Decrease score for ignoring
+            }
+            updateScore();
+            generateRandomScenario();
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = score;
+        }
+
+        function generateRandomScenario() {
+            // Here you can add more scenarios or variations
+            const scenarios = [
+                "You've received an email asking for your password.",
+                "A website is asking for your credit card information.",
+                "Your friend sent you a link that seems suspicious.",
+                "A pop-up says you've won a prize! Click here to claim it."
+            ];
+            const randomIndex = Math.floor(Math.random() * scenarios.length);
+            document.getElementById('game').querySelector('p').innerText = scenarios[randomIndex];
+        }
+
+        // Initialize the first scenario
+        generateRandomScenario();
+    </script>
+</body>
+</html>
