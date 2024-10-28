@@ -1,0 +1,12 @@
+MALVERSE-GAMES/
+├── app.py
+├── templates/
+│   ├── index.html
+│   ├── game1.html
+│   ├── game2.html
+│   ├── game3.html
+│   ├── game4.html
+│   ├── game5.html
+│   ├── game6.html
+│   └── centralised_scoreboard.html
+
